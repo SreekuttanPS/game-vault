@@ -5,20 +5,49 @@ import { SNAKE_FRAME_SPEED, SNAKE_PIXEL } from "@/src/utils/constants";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const SnakeCanvas = () => {
-  const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const isPaused = useRef<boolean>(true);
+  const isGameOver = useRef<boolean>(false);
   const snakeRef = useRef<SnakeElement[]>([{ x: 0, y: 0 }]);
   const foodRef = useRef<SnakeElement | null>(null);
   const directionRef = useRef(Direction.RIGHT);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const draw = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (isPaused.current) {
+      console.log("hit 1 ");
+      ctx.fillStyle = "blue";
+      ctx.font = "35px serif";
+      ctx.fillText("Press Space or P", 30, 150);
+      return;
+    }
+
+    if (isGameOver.current) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      snakeRef.current = [{ x: 0, y: 0 }];
+      foodRef.current = null;
+      ctx.font = "48px serif";
+      ctx.fillText("Game Over", 30, 150);
+      ctx.font = "21px serif";
+      ctx.fillText("Press R or Reload to restart", 30, 180);
+      return;
+    }
 
     // Snake
-    ctx.fillStyle = "lime";
-    snakeRef.current.forEach((seg) => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ctx.fillStyle = "lime";
+    snakeRef.current.forEach((seg, index) => {
+      const isHead = index === snakeRef.current.length - 1;
+
+      ctx.fillStyle = "#22c55e";
       ctx.fillRect(seg.x, seg.y, SNAKE_PIXEL, SNAKE_PIXEL);
+
+      if (isHead) {
+        ctx.fillStyle = "black";
+
+        ctx.fillRect(seg.x + 2, seg.y + 2, 2, 2);
+        ctx.fillRect(seg.x + 6, seg.y + 2, 2, 2);
+      }
     });
 
     // Food
@@ -37,7 +66,20 @@ const SnakeCanvas = () => {
   const updateGame = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
+    if (!canvas || !ctx) {
+      return;
+    }
+
+    if (isPaused.current) {
+      draw(ctx, canvas);
+      return;
+    }
+
+    if (isGameOver.current) {
+      directionRef.current = Direction.RIGHT;
+      draw(ctx, canvas);
+      return;
+    }
 
     const { snakeBody, newFoodPosition, isCrashed, shouldIncreaseScore } =
       getNewSnakeDetails(
@@ -49,7 +91,7 @@ const SnakeCanvas = () => {
       );
 
     if (isCrashed) {
-      setIsGameOver(isCrashed);
+      isGameOver.current = isCrashed;
     }
 
     if (shouldIncreaseScore) {
@@ -74,7 +116,13 @@ const SnakeCanvas = () => {
   // Handle key press.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const newDir = getDirection(e.key);
+      if (!isGameOver.current && (e?.key === "p" || e.key === " ")) {
+        isPaused.current = !isPaused.current;
+      } else if (e.key === "r") {
+        isGameOver.current = false;
+        setScore(0);
+      }
+      const newDir = getDirection(directionRef.current, e.key);
       if (newDir) {
         directionRef.current = newDir;
       }

@@ -1,0 +1,38 @@
+<svg width="520" height="160" viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gvGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E8FFB5"/>
+      <stop offset="100%" stop-color="#2FD4FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fixed G (fully inside viewBox) -->
+  <path
+    d="M75 25
+       Q35 25 35 80
+       Q35 135 75 135
+       H115
+       V88
+       H75
+       V70
+       H135
+       V145
+       Q105 150 75 150
+       Q15 150 15 80
+       Q15 10 75 10
+       Q105 10 135 25"
+    fill="url(#gvGradient)"
+  />
+
+  <!-- Text -->
+  <text
+    x="150"
+    y="105"
+    font-size="64"
+    font-family="Poppins, Inter, system-ui, sans-serif"
+    font-weight="800"
+    fill="url(#gvGradient)"
+    letter-spacing="-1">
+    ameVault
+  </text>
+</svg>

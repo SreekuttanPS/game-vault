@@ -1,4 +1,13 @@
 import SnakeCanvas from "@/src/components/snake/SnakeCanvas";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Snake Xenzia Reborn",
+  description: "Snake Xenzia Games online",
+  icons: {
+    icon: "/images/icon.svg",
+  },
+};
 
 export default function SnakeGame() {
   return (
@@ -10,7 +19,9 @@ export default function SnakeGame() {
             <span className="text-green-400">Xenzia</span>
           </h1>
 
-          <p className="text-zinc-300 text-lg md:text-xl">A Snake Xenzia game reborn from Nokia 1200</p>
+          <p className="text-zinc-300 text-lg md:text-xl">
+            A Snake Xenzia game reborn from Nokia 1200
+          </p>
         </div>
         <SnakeCanvas />
       </div>

@@ -20,7 +20,8 @@ export const getNewSnakeDetails = (
     head.x < 0 || head.x > canvasWidth || head.y < 0 || head.y > canvasHeight;
 
   const isCrashedOnBody = snakeBody.some(
-    (seg) => seg.x === head.x && seg.y === head.y
+    (seg, index, snakeArray) =>
+      seg.x === head.x && seg.y === head.y && index !== snakeArray.length - 1
   );
 
   if (!hasEaten) {
@@ -75,32 +76,67 @@ export const getNewFoodPosition = (
   return newFood;
 };
 
-export const getDirection = (key: KeyboardEvent["key"]) => {
-  let direction: Direction = Direction.RIGHT;
+export const getDirection = (
+  currentDirection: Direction,
+  key: KeyboardEvent["key"]
+) => {
+  let direction: Direction = currentDirection;
   switch (key) {
     case "ArrowDown":
-      direction = Direction.DOWN;
+      if (currentDirection === Direction.UP) {
+        direction = currentDirection;
+      } else {
+        direction = Direction.DOWN;
+      }
       break;
     case "ArrowLeft":
-      direction = Direction.LEFT;
+      if (currentDirection === Direction.RIGHT) {
+        direction = currentDirection;
+      } else {
+        direction = Direction.LEFT;
+      }
       break;
     case "ArrowRight":
-      direction = Direction.RIGHT;
+      if (currentDirection === Direction.LEFT) {
+        direction = currentDirection;
+      } else {
+        direction = Direction.RIGHT;
+      }
       break;
     case "ArrowUp":
-      direction = Direction.UP;
+      if (currentDirection === Direction.DOWN) {
+        direction = currentDirection;
+      } else {
+        direction = Direction.UP;
+      }
       break;
     case "w":
-      direction = Direction.UP;
+      if (currentDirection === Direction.DOWN) {
+        direction = currentDirection;
+      } else {
+        direction = Direction.UP;
+      }
       break;
     case "a":
-      direction = Direction.LEFT;
+      if (currentDirection === Direction.RIGHT) {
+        direction = currentDirection;
+      } else {
+        direction = Direction.LEFT;
+      }
       break;
     case "d":
-      direction = Direction.RIGHT;
+      if (currentDirection === Direction.LEFT) {
+        direction = currentDirection;
+      } else {
+        direction = Direction.RIGHT;
+      }
       break;
     case "s":
-      direction = Direction.DOWN;
+      if (currentDirection === Direction.UP) {
+        direction = currentDirection;
+      } else {
+        direction = Direction.DOWN;
+      }
       break;
     default:
       break;

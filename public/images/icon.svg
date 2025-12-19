@@ -1,0 +1,25 @@
+<svg width="64" height="64" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gvGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E8FFB5"/>
+      <stop offset="100%" stop-color="#2FD4FF"/>
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M60 20
+       Q30 20 30 60
+       Q30 100 60 100
+       H85
+       V65
+       H60
+       V55
+       H95
+       V105
+       Q80 110 60 110
+       Q20 110 20 60
+       Q20 10 60 10
+       Q80 10 95 20"
+    fill="url(#gvGradient)"
+  />
+</svg>
