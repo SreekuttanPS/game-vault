@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 
 export default function SnakeGame() {
   return (
-    <main className="min-h-screen bg-linear-to-br from-black via-zinc-900 to-purple-900 text-white flex items-center justify-center px-6">
+    <main className="min-h-screen min-w-screen bg-linear-to-br from-black via-zinc-900 to-purple-900 text-white flex items-center justify-center px-6">
       <div className="max-w-5xl w-full text-center space-y-10">
         <div className="space-y-4">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
+          <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight">
             <span className="text-purple-400">Snake</span>
             <span className="text-green-400">Xenzia</span>
           </h1>

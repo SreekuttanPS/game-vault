@@ -17,8 +17,8 @@ const SnakeCanvas = () => {
     if (isPaused.current) {
       console.log("hit 1 ");
       ctx.fillStyle = "blue";
-      ctx.font = "35px serif";
-      ctx.fillText("Press Space or P", 30, 150);
+      ctx.font = "30px serif";
+      ctx.fillText("Press Space or P", 25, 130);
       return;
     }
 
@@ -26,10 +26,10 @@ const SnakeCanvas = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       snakeRef.current = [{ x: 0, y: 0 }];
       foodRef.current = null;
-      ctx.font = "48px serif";
-      ctx.fillText("Game Over", 30, 150);
-      ctx.font = "21px serif";
-      ctx.fillText("Press R or Reload to restart", 30, 180);
+      ctx.font = "42px serif";
+      ctx.fillText("Game Over", 25, 130);
+      ctx.font = "18px serif";
+      ctx.fillText("Press R or Reload to restart", 30, 160);
       return;
     }
 
@@ -105,6 +105,19 @@ const SnakeCanvas = () => {
     draw(ctx, canvas);
   }, []);
 
+  const handleButtonClick = (key: string) => {
+    const newDir = getDirection(directionRef.current, key);
+    if (newDir) {
+      directionRef.current = newDir;
+    }
+  };
+
+  const onPause = () => {
+    isPaused.current = !isGameOver.current
+      ? !isPaused.current
+      : isPaused.current;
+  };
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       updateGame();
@@ -137,19 +150,94 @@ const SnakeCanvas = () => {
 
   return (
     <div>
-      <div className="text-sm md:text-base font-mono bg-black/60 px-4 py-2 rounded-lg border border-green-400 shadow-[0_0_10px_rgba(34,197,94,0.5)]">
+      <div className="text-sm md:text-base font-mono bg-black/60 px-4 py-2 md:rounded-lg md:border border-green-400 shadow-[0_0_10px_rgba(34,197,94,0.5)]">
         Score: <span className="text-green-300">{score}</span>
       </div>
-      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8 md:p-12 shadow-2xl flex justify-center">
+      <div className="md:bg-white/5 md:backdrop-blur-lg md:border md:border-white/10 md:rounded-2xl p-8 md:p-12 shadow-2xl flex flex-col md:flex-row justify-center">
         <canvas
           id="snake_canvas"
-          width="300"
-          height="300"
+          width="250"
+          height="250"
           className="bg-black border-4 border-green-400 rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.6)]"
           ref={canvasRef}
         >
           Snake Game Screen.
         </canvas>
+        <div className="md:hidden">
+          <div className="mt-6 flex flex-col items-center gap-4">
+            <div className="grid grid-cols-3 grid-rows-3 gap-3">
+              <button
+                className="
+                  col-start-2 row-start-1
+                  w-14 h-14 rounded-lg
+                  bg-black/80 border border-green-400
+                  text-green-400 text-xl
+                  shadow-[0_0_10px_rgba(34,197,94,0.5)]
+                  active:scale-95 transition
+                "
+                onClick={() => handleButtonClick("ArrowUp")}
+              >
+                ▲
+              </button>
+
+              <button
+                className="
+                  col-start-1 row-start-2
+                  w-14 h-14 rounded-lg
+                  bg-black/80 border border-green-400
+                  text-green-400 text-xl
+                  shadow-[0_0_10px_rgba(34,197,94,0.5)]
+                  active:scale-95 transition
+                "
+                onClick={() => handleButtonClick("ArrowLeft")}
+              >
+                ◀
+              </button>
+
+              <button
+                className="
+                  col-start-2 row-start-2
+                  w-14 h-14 rounded-lg
+                  bg-black/60 border border-green-400
+                  shadow-inner text-green-400 font-mono
+                "
+                onClick={onPause}
+              >
+                P
+              </button>
+
+              {/* RIGHT */}
+              <button
+                className="
+                  col-start-3 row-start-2
+                  w-14 h-14 rounded-lg
+                  bg-black/80 border border-green-400
+                  text-green-400 text-xl
+                  shadow-[0_0_10px_rgba(34,197,94,0.5)]
+                  active:scale-95 transition
+                "
+                onClick={() => handleButtonClick("ArrowRight")}
+              >
+                ▶
+              </button>
+
+              {/* DOWN */}
+              <button
+                className="
+                  col-start-2 row-start-3
+                  w-14 h-14 rounded-lg
+                  bg-black/80 border border-green-400
+                  text-green-400 text-xl
+                  shadow-[0_0_10px_rgba(34,197,94,0.5)]
+                  active:scale-95 transition
+                "
+                onClick={() => handleButtonClick("ArrowDown")}
+              >
+                ▼
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
