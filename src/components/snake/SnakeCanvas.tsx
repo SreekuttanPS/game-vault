@@ -15,7 +15,6 @@ const SnakeCanvas = () => {
 
   const draw = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
     if (isPaused.current) {
-      console.log("hit 1 ");
       ctx.fillStyle = "blue";
       ctx.font = "30px serif";
       ctx.fillText("Press Space or P", 25, 130);
