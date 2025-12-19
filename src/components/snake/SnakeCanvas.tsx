@@ -1,4 +1,5 @@
 "use client";
+import useIsMobile from "@/src/hooks/useIsMobile";
 import { getDirection, getNewSnakeDetails } from "@/src/logic/snakeLogic";
 import { Direction, SnakeElement } from "@/src/types/snakeTypes";
 import { SNAKE_FRAME_SPEED, SNAKE_PIXEL } from "@/src/utils/constants";
@@ -13,74 +14,79 @@ const SnakeCanvas = () => {
   const directionRef = useRef(Direction.RIGHT);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const draw = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-    if (isPaused.current) {
-      ctx.fillStyle = "#3b82f6";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
+  const isMobile = useIsMobile();
 
-      ctx.font = `${Math.floor(canvas.width * 0.08)}px monospace`;
-      ctx.fillText("PAUSED", canvas.width / 2, canvas.height / 2 - 20);
+  const draw = useCallback(
+    (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+      if (isPaused.current) {
+        ctx.fillStyle = "#3b82f6";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
 
-      ctx.font = `${Math.floor(canvas.width * 0.045)}px monospace`;
-      ctx.fillText(
-        "Press Space or P",
-        canvas.width / 2,
-        canvas.height / 2 + 20
-      );
+        ctx.font = `${Math.floor(canvas.width * 0.08)}px monospace`;
+        ctx.fillText("PAUSED", canvas.width / 2, canvas.height / 2 - 20);
 
-      return;
-    }
+        ctx.font = `${Math.floor(canvas.width * 0.045)}px monospace`;
+        ctx.fillText(
+          `Press ${!isMobile ? "Space or " : ""}P`,
+          canvas.width / 2,
+          canvas.height / 2 + 20
+        );
 
-    if (isGameOver.current) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = "#ef4444";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-
-      ctx.font = `${Math.floor(canvas.width * 0.12)}px monospace`;
-      ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 30);
-
-      ctx.fillStyle = "#e5e7eb";
-      ctx.font = `${Math.floor(canvas.width * 0.045)}px monospace`;
-      ctx.fillText(
-        "Press R or Reload to restart",
-        canvas.width / 2,
-        canvas.height / 2 + 20
-      );
-
-      return;
-    }
-
-    // Snake
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // ctx.fillStyle = "lime";
-    snakeRef.current.forEach((seg, index) => {
-      const isHead = index === snakeRef.current.length - 1;
-
-      ctx.fillStyle = "#22c55e";
-      ctx.fillRect(seg.x, seg.y, SNAKE_PIXEL, SNAKE_PIXEL);
-
-      if (isHead) {
-        ctx.fillStyle = "black";
-
-        ctx.fillRect(seg.x + 2, seg.y + 2, 2, 2);
-        ctx.fillRect(seg.x + 6, seg.y + 2, 2, 2);
+        return;
       }
-    });
 
-    // Food
-    if (foodRef.current) {
-      ctx.fillStyle = "red";
-      ctx.fillRect(
-        foodRef.current.x,
-        foodRef.current.y,
-        SNAKE_PIXEL,
-        SNAKE_PIXEL
-      );
-    }
-  };
+      if (isGameOver.current) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#ef4444";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.font = `${Math.floor(canvas.width * 0.12)}px monospace`;
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 30);
+
+        ctx.fillStyle = "#e5e7eb";
+        ctx.font = `${Math.floor(canvas.width * 0.045)}px monospace`;
+        ctx.fillText(
+          `${!isMobile ? "Press R or " : ""}Reload to restart`,
+          canvas.width / 2,
+          canvas.height / 2 + 20
+        );
+
+        return;
+      }
+
+      // Snake
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // ctx.fillStyle = "lime";
+      snakeRef.current.forEach((seg, index) => {
+        const isHead = index === snakeRef.current.length - 1;
+
+        ctx.fillStyle = "#22c55e";
+        ctx.fillRect(seg.x, seg.y, SNAKE_PIXEL, SNAKE_PIXEL);
+
+        if (isHead) {
+          ctx.fillStyle = "black";
+
+          ctx.fillRect(seg.x + 2, seg.y + 2, 2, 2);
+          ctx.fillRect(seg.x + 6, seg.y + 2, 2, 2);
+        }
+      });
+
+      // Food
+      if (foodRef.current) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(
+          foodRef.current.x,
+          foodRef.current.y,
+          SNAKE_PIXEL,
+          SNAKE_PIXEL
+        );
+      }
+    },
+    [isMobile]
+  );
 
   // Handle snake movement and food position.
   const updateGame = useCallback(() => {
@@ -123,7 +129,7 @@ const SnakeCanvas = () => {
     foodRef.current = newFoodPosition;
 
     draw(ctx, canvas);
-  }, []);
+  }, [draw]);
 
   const handleButtonClick = (key: string) => {
     const newDir = getDirection(directionRef.current, key);
