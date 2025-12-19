@@ -77,9 +77,6 @@ export default function Home() {
             </Link>
           </div>
         </div>
-
-        {/* Footer vibe */}
-        <div className="text-sm text-zinc-400">Built with ❤️ using Next.js</div>
       </div>
     </main>
   );
