@@ -16,29 +16,49 @@ export const getNewSnakeDetails = (
     head.x === currentFoodPosition.x &&
     head.y === currentFoodPosition.y;
 
-  const isCrashedOnWall =
-    head.x < 0 || head.x > canvasWidth || head.y < 0 || head.y > canvasHeight;
-
   const isCrashedOnBody = snakeBody.some(
     (seg, index, snakeArray) =>
       seg.x === head.x && seg.y === head.y && index !== snakeArray.length - 1
   );
+
+  const isCrashedOnTopWall = head.y <= 0;
+  const isCrashedOnBottomWall = head.y >= canvasHeight - SNAKE_PIXEL;
+  const isCrashedOnLeftWall = head.x <= 0;
+  const isCrashedOnRightWall = head.x >= canvasWidth - SNAKE_PIXEL;
 
   if (!hasEaten) {
     snakeBody.shift();
   }
   switch (direction) {
     case "UP":
-      snakeBody.push({ x: head?.x, y: head.y - SNAKE_PIXEL });
+      if (isCrashedOnTopWall) {
+        snakeBody.push({ x: head?.x, y: canvasHeight - SNAKE_PIXEL });
+      } else {
+        snakeBody.push({ x: head?.x, y: head.y - SNAKE_PIXEL });
+      }
       break;
     case "DOWN":
-      snakeBody.push({ x: head?.x, y: head.y + SNAKE_PIXEL });
+      if (isCrashedOnBottomWall) {
+        console.log("hit bottom");
+        snakeBody.push({ x: head?.x, y: 0 });
+      } else {
+        snakeBody.push({ x: head?.x, y: head.y + SNAKE_PIXEL });
+      }
       break;
     case "LEFT":
-      snakeBody.push({ x: head?.x - SNAKE_PIXEL, y: head.y });
+      if (isCrashedOnLeftWall) {
+        snakeBody.push({ x: canvasWidth - SNAKE_PIXEL, y: head.y });
+      } else {
+        snakeBody.push({ x: head?.x - SNAKE_PIXEL, y: head.y });
+      }
       break;
     case "RIGHT":
-      snakeBody.push({ x: head?.x + SNAKE_PIXEL, y: head.y });
+      if (isCrashedOnRightWall) {
+        console.log("hit on right");
+        snakeBody.push({ x: 0, y: head.y });
+      } else {
+        snakeBody.push({ x: head?.x + SNAKE_PIXEL, y: head.y });
+      }
       break;
     default:
       break;
@@ -51,7 +71,7 @@ export const getNewSnakeDetails = (
   return {
     snakeBody,
     newFoodPosition,
-    isCrashed: isCrashedOnWall || isCrashedOnBody,
+    isCrashed: isCrashedOnBody,
     shouldIncreaseScore: hasEaten,
   };
 };
