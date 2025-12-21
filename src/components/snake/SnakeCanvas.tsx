@@ -159,6 +159,8 @@ const SnakeCanvas = () => {
         isPaused.current = !isPaused.current;
       } else if (e.key === "r") {
         isGameOver.current = false;
+        snakeRef.current = [{ x: 0, y: 0 }];
+        foodRef.current = null;
         setScore(0);
       }
       const newDir = getDirection(directionRef.current, e.key);
